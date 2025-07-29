@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:splitxapp/helpers/base_screen_view.dart';
 import 'package:splitxapp/helpers/base_view_model.dart';
 import 'package:splitxapp/models/group.dart';
+import 'package:splitxapp/routes/app_routes.dart';
 
 final groupsViewModel = ChangeNotifierProvider((ref) => GroupsViewModel());
 
@@ -85,6 +87,10 @@ class GroupsViewModel extends BaseViewModel<BaseScreenView> {
   }
 
   void openGroup(BuildContext context, Group group) {
-    view?.showSnackbar('Opening ${group.name}...');
-  }
+  context.pushNamed(
+    AppRoute.groupMain.name,
+    pathParameters: {'groupId': group.id},
+    queryParameters: {'groupName': group.name},
+  );
+}
 }
