@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:splitxapp/utils/colors.dart';
-import 'package:splitxapp/view/activity/activity_view_model.dart';
+import 'package:splitxapp/view/screens/activity/activity_view_model.dart';
 import 'package:splitxapp/view/widgets/recent_activity_card.dart';
 
 class ActivityView extends ConsumerStatefulWidget {

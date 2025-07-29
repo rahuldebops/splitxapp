@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:splitxapp/helpers/base_screen_view.dart';
 import 'package:splitxapp/routes/app_routes.dart';
 import 'package:splitxapp/utils/colors.dart';
-import 'package:splitxapp/view/groups/groups_view_model.dart';
+import 'package:splitxapp/view/screens/groups/groups_view_model.dart';
 import 'package:splitxapp/view/widgets/group_card.dart';
 
 class GroupsView extends ConsumerStatefulWidget {

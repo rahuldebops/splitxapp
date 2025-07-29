@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:splitxapp/view/account/account_view.dart';
-import 'package:splitxapp/view/activity/activity_view.dart';
-import 'package:splitxapp/view/friends/friends_view.dart';
-import 'package:splitxapp/view/groups/groups_view.dart';
+import 'package:splitxapp/view/screens/account/account_view.dart';
+import 'package:splitxapp/view/screens/activity/activity_view.dart';
+import 'package:splitxapp/view/screens/friends/friends_view.dart';
+import 'package:splitxapp/view/screens/groups/groups_view.dart';
 import 'package:splitxapp/view/widgets/custom_bottom_navbar.dart';
 import 'package:splitxapp/view/widgets/custom_header.dart';
 import 'package:splitxapp/utils/colors.dart';

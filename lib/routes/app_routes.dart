@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:splitxapp/view/groups/groups_view.dart';
+import 'package:splitxapp/view/screens/groups/groups_view.dart';
 import 'package:splitxapp/view/screens/login/login_view.dart';
 import 'package:splitxapp/view/screens/main/main_screen.dart';
 import 'package:splitxapp/view/screens/signup/signup_view.dart';
