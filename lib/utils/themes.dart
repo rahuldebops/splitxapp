@@ -131,7 +131,7 @@ class AppThemes {
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent,
     // brightness: Brightness.light,
-    cardColor: kBlack,
+    // cardColor: kBlack,
     fontFamily: "Inter",
     scaffoldBackgroundColor: _lightBackgroundColor,
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
