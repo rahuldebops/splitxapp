@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:splitxapp/view/screens/group/group_balance_view';
+import 'package:splitxapp/view/screens/group/group_balance_view.dart';
 import 'package:splitxapp/view/screens/group/group_expenses_view.dart';
 import 'package:splitxapp/view/screens/group/group_payments_view.dart';
 import 'package:splitxapp/view/screens/group/group_settlement_view.dart';

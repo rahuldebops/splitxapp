@@ -100,7 +100,7 @@ class ExpenseCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      expense.paidBy,
+                      "expense.paidBy as String",
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),

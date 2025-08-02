@@ -1,9 +1,13 @@
+// routes/app_routes.dart
 import 'package:go_router/go_router.dart';
 import 'package:splitxapp/view/screens/login/login_view.dart';
 import 'package:splitxapp/view/screens/main/main_screen.dart';
 import 'package:splitxapp/view/screens/signup/signup_view.dart';
 import 'package:splitxapp/view/screens/splash/splash_view.dart';
 import 'package:splitxapp/view/screens/group/group_main_view.dart';
+import 'package:splitxapp/view/screens/expense/expense_view.dart';
+import 'package:splitxapp/view/screens/expense/expense_list_view.dart';
+import 'package:splitxapp/view/screens/expense/expense_detail_view.dart';
 
 enum AppRoute {
   splash,
@@ -16,6 +20,10 @@ enum AppRoute {
   groupPayments,
   groupSettlement,
   groupTotals,
+  expenseList,
+  expenseAdd,
+  expenseEdit,
+  expenseDetail,
 }
 
 // flutter packages pub run build_runner build --delete-conflicting-outputs
@@ -46,7 +54,10 @@ final routers = [
     builder: (context, state) {
       final groupId = state.pathParameters['groupId']!;
       final groupName = state.uri.queryParameters['groupName'] ?? 'Group';
-      return GroupMainView(groupId: groupId, groupName: groupName);
+      return GroupMainView(
+        groupId: groupId,
+        groupName: groupName,
+      );
     },
     routes: [
       GoRoute(
@@ -55,7 +66,11 @@ final routers = [
         builder: (context, state) {
           final groupId = state.pathParameters['groupId']!;
           final groupName = state.uri.queryParameters['groupName'] ?? 'Group';
-          return GroupMainView(groupId: groupId, groupName: groupName, initialTab: 0);
+          return GroupMainView(
+            groupId: groupId,
+            groupName: groupName,
+            initialTab: 0,
+          );
         },
       ),
       GoRoute(
@@ -64,7 +79,11 @@ final routers = [
         builder: (context, state) {
           final groupId = state.pathParameters['groupId']!;
           final groupName = state.uri.queryParameters['groupName'] ?? 'Group';
-          return GroupMainView(groupId: groupId, groupName: groupName, initialTab: 1);
+          return GroupMainView(
+            groupId: groupId,
+            groupName: groupName,
+            initialTab: 1,
+          );
         },
       ),
       GoRoute(
@@ -73,7 +92,11 @@ final routers = [
         builder: (context, state) {
           final groupId = state.pathParameters['groupId']!;
           final groupName = state.uri.queryParameters['groupName'] ?? 'Group';
-          return GroupMainView(groupId: groupId, groupName: groupName, initialTab: 2);
+          return GroupMainView(
+            groupId: groupId,
+            groupName: groupName,
+            initialTab: 2,
+          );
         },
       ),
       GoRoute(
@@ -82,7 +105,11 @@ final routers = [
         builder: (context, state) {
           final groupId = state.pathParameters['groupId']!;
           final groupName = state.uri.queryParameters['groupName'] ?? 'Group';
-          return GroupMainView(groupId: groupId, groupName: groupName, initialTab: 3);
+          return GroupMainView(
+            groupId: groupId,
+            groupName: groupName,
+            initialTab: 3,
+          );
         },
       ),
       GoRoute(
@@ -91,7 +118,55 @@ final routers = [
         builder: (context, state) {
           final groupId = state.pathParameters['groupId']!;
           final groupName = state.uri.queryParameters['groupName'] ?? 'Group';
-          return GroupMainView(groupId: groupId, groupName: groupName, initialTab: 4);
+          return GroupMainView(
+            groupId: groupId,
+            groupName: groupName,
+            initialTab: 4,
+          );
+        },
+      ),
+    ],
+  ),
+  
+  // Expense Routes
+  GoRoute(
+    path: '/expenses/:groupId',
+    name: AppRoute.expenseList.name,
+    builder: (context, state) {
+      final groupId = state.pathParameters['groupId']!;
+      return ExpenseListView(groupId: groupId);
+    },
+    routes: [
+      GoRoute(
+        path: '/add',
+        name: AppRoute.expenseAdd.name,
+        builder: (context, state) {
+          final groupId = state.pathParameters['groupId']!;
+          return ExpenseView(groupId: groupId);
+        },
+      ),
+      GoRoute(
+        path: '/edit/:expenseId',
+        name: AppRoute.expenseEdit.name,
+        builder: (context, state) {
+          final groupId = state.pathParameters['groupId']!;
+          final expenseId = state.pathParameters['expenseId']!;
+          return ExpenseView(
+            expenseId: expenseId,
+            groupId: groupId,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/detail/:expenseId',
+        name: AppRoute.expenseDetail.name,
+        builder: (context, state) {
+          final groupId = state.pathParameters['groupId']!;
+          final expenseId = state.pathParameters['expenseId']!;
+          return ExpenseDetailView(
+            expenseId: expenseId,
+            groupId: groupId,
+          );
         },
       ),
     ],
