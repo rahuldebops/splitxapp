@@ -8,7 +8,7 @@ import 'package:splitxapp/view/widgets/group_card.dart';
 import 'package:splitxapp/view/widgets/recent_activity_card.dart';
 
 class HomeView extends ConsumerStatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+  const HomeView({super.key});
 
   @override
   ConsumerState<HomeView> createState() => _HomeViewState();

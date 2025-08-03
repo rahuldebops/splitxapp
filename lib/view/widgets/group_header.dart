@@ -7,10 +7,10 @@ class GroupHeader extends StatelessWidget {
   final String groupId;
 
   const GroupHeader({
-    Key? key,
+    super.key,
     required this.groupName,
     required this.groupId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

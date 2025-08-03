@@ -4,7 +4,7 @@ import 'package:splitxapp/utils/colors.dart';
 import 'package:splitxapp/view/screens/main/main_screen.dart';
 
 class CustomBottomNavbar extends ConsumerWidget {
-  const CustomBottomNavbar({Key? key}) : super(key: key);
+  const CustomBottomNavbar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

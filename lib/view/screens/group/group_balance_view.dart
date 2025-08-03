@@ -5,9 +5,9 @@ class GroupBalanceView extends StatelessWidget {
   final String groupId;
 
   const GroupBalanceView({
-    Key? key,
+    super.key,
     required this.groupId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

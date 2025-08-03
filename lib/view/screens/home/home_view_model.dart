@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:splitxapp/domain/provider/user_session_provider.dart';
 import 'package:splitxapp/models/group.dart';
 import 'package:splitxapp/models/recent_activity.dart';
 import 'package:splitxapp/helpers/base_screen_view.dart';
 import 'package:splitxapp/helpers/base_view_model.dart';
 
-final homeViewModel = ChangeNotifierProvider((ref) => HomeViewModel());
+final homeViewModel = ChangeNotifierProvider((ref) => HomeViewModel(ref));
 
 class HomeViewModel extends BaseViewModel<BaseScreenView> {
+
+  final Ref _ref;
+
+  HomeViewModel(this._ref);
+
   String _userName = '';
   String _overallBalance = '₹0';
   String _youOwe = '₹0';
@@ -31,8 +37,10 @@ class HomeViewModel extends BaseViewModel<BaseScreenView> {
       // Simulate API call
       await Future.delayed(const Duration(seconds: 1));
       
+      final user = _ref.read(userSessionProvider);
+      
       // Mock data
-      _userName = 'John Doe';
+      _userName = user?.name ?? 'Hero';
       _overallBalance = '₹1,250';
       _youOwe = '₹800';
       _youAreOwed = '₹2,050';

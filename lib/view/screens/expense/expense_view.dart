@@ -14,10 +14,10 @@ class ExpenseView extends ConsumerStatefulWidget {
   final String groupId;
 
   const ExpenseView({
-    Key? key,
+    super.key,
     this.expenseId,
     required this.groupId,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<ExpenseView> createState() => _ExpenseViewState();
@@ -346,7 +346,7 @@ class _ExpenseViewState extends ConsumerState<ExpenseView> {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -442,7 +442,7 @@ class _ExpenseViewState extends ConsumerState<ExpenseView> {
             ...state.splitBetween.map((split) {
               final member = state.groupMembers.firstWhere((m) => m.id == split.userId);
               return _buildSplitInput(context, state, viewModel, split, member);
-            }).toList(),
+            }),
           ],
         ),
       ),

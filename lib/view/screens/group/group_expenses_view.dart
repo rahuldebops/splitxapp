@@ -9,9 +9,9 @@ class GroupExpensesView extends ConsumerStatefulWidget {
   final String groupId;
 
   const GroupExpensesView({
-    Key? key,
+    super.key,
     required this.groupId,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<GroupExpensesView> createState() => _GroupExpensesViewState();

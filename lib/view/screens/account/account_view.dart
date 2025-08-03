@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:splitxapp/utils/colors.dart';
 
 class AccountView extends StatelessWidget {
-  const AccountView({Key? key}) : super(key: key);
+  const AccountView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,10 +7,10 @@ class GroupCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const GroupCard({
-    Key? key,
+    super.key,
     required this.group,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

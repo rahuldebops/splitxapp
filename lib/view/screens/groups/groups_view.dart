@@ -7,7 +7,7 @@ import 'package:splitxapp/view/screens/groups/groups_view_model.dart';
 import 'package:splitxapp/view/widgets/group_card.dart';
 
 class GroupsView extends ConsumerStatefulWidget {
-  const GroupsView({Key? key}) : super(key: key);
+  const GroupsView({super.key});
 
   @override
   ConsumerState<GroupsView> createState() => _GroupsViewState();

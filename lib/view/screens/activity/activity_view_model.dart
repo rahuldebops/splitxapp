@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:splitxapp/helpers/base_view_model.dart';
 import 'package:splitxapp/models/recent_activity.dart';
 
 final activityViewModel = ChangeNotifierProvider((ref) => ActivityViewModel());

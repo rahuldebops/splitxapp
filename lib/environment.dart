@@ -19,8 +19,6 @@ class Environment {
 
   Future<void> _init() async {
     WidgetsFlutterBinding.ensureInitialized();
-    // await Firebase.initializeApp();
-    // await FirebaseMessagingProvider.init();
     await SharedPreferenceService.init();
 
     try {

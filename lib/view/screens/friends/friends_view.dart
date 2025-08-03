@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:splitxapp/utils/colors.dart';
 
 class FriendsView extends StatelessWidget {
-  const FriendsView({Key? key}) : super(key: key);
+  const FriendsView({super.key});
 
   @override
   Widget build(BuildContext context) {

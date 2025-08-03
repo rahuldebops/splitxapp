@@ -13,10 +13,10 @@ class ExpenseDetailView extends ConsumerStatefulWidget {
   final String groupId;
 
   const ExpenseDetailView({
-    Key? key,
+    super.key,
     required this.expenseId,
     required this.groupId,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<ExpenseDetailView> createState() => _ExpenseDetailViewState();
@@ -347,7 +347,7 @@ class _ExpenseDetailViewState extends ConsumerState<ExpenseDetailView> {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -433,7 +433,7 @@ class _ExpenseDetailViewState extends ConsumerState<ExpenseDetailView> {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),

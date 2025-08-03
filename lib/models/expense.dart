@@ -1,5 +1,4 @@
 // models/expense.dart
-import 'package:flutter/material.dart';
 
 enum SplitType {
   equally,

@@ -5,7 +5,7 @@ import 'package:splitxapp/view/screens/activity/activity_view_model.dart';
 import 'package:splitxapp/view/widgets/recent_activity_card.dart';
 
 class ActivityView extends ConsumerStatefulWidget {
-  const ActivityView({Key? key}) : super(key: key);
+  const ActivityView({super.key});
 
   @override
   ConsumerState<ActivityView> createState() => _ActivityViewState();

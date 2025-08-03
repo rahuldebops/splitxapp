@@ -280,7 +280,7 @@ class _SignupViewState extends ConsumerState<SignupView> with BaseScreenView {
     if (_formKey.currentState!.validate()) {
       _viewModel.signup(
         context,
-        new RegisterRequestModel(
+        RegisterRequestModel(
           fullName: _nameController.text.trim(),
           phone: '${[7,8,9][Random().nextInt(3)]}${List.generate(9, (_) => Random().nextInt(10)).join()}',
           email: _emailController.text.trim(),

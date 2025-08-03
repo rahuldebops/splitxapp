@@ -23,6 +23,7 @@ dependencies:
   json_serializer: ^0.2.0
   shared_preferences: ^2.5.3
   dynamic_color: ^1.6.5
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   flutter_test:

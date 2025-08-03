@@ -5,9 +5,9 @@ class GroupTotalsView extends StatelessWidget {
   final String groupId;
 
   const GroupTotalsView({
-    Key? key,
+    super.key,
     required this.groupId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

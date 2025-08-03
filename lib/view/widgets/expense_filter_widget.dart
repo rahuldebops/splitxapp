@@ -11,7 +11,7 @@ class ExpenseFilterWidget extends StatelessWidget {
   final VoidCallback onClearFilters;
 
   const ExpenseFilterWidget({
-    Key? key,
+    super.key,
     this.selectedCategory,
     this.selectedMember,
     this.dateRange,
@@ -19,7 +19,7 @@ class ExpenseFilterWidget extends StatelessWidget {
     required this.onMemberChanged,
     required this.onDateRangeChanged,
     required this.onClearFilters,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

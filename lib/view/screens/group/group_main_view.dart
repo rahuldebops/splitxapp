@@ -15,11 +15,11 @@ class GroupMainView extends ConsumerStatefulWidget {
   final int initialTab;
 
   const GroupMainView({
-    Key? key,
+    super.key,
     required this.groupId,
     required this.groupName,
     this.initialTab = 0,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<GroupMainView> createState() => _GroupMainViewState();

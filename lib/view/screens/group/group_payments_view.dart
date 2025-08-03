@@ -5,9 +5,9 @@ class GroupPaymentsView extends StatelessWidget {
   final String groupId;
 
   const GroupPaymentsView({
-    Key? key,
+    super.key,
     required this.groupId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

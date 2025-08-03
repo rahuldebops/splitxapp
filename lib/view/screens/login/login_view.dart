@@ -8,7 +8,7 @@ import 'package:splitxapp/utils/colors.dart';
 import 'package:splitxapp/view/screens/login/login_view_model.dart';
 
 class LoginView extends ConsumerStatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+  const LoginView({super.key});
 
   @override
   ConsumerState<LoginView> createState() => _LoginViewState();

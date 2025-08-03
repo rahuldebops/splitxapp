@@ -23,7 +23,7 @@ class _SplashViewState extends ConsumerState<SplashView> with BaseScreenView {
     _viewModel = ref.read(splashViewModel);
     _viewModel.attachView(this);
     Future.delayed(const Duration(seconds: 3))
-        .then((value) async => _viewModel.GoToHome(context));
+        .then((value) async => _viewModel.GoToHome(context, ref));
   }
 
   @override

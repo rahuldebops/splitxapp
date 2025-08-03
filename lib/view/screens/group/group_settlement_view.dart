@@ -5,9 +5,9 @@ class GroupSettlementView extends StatelessWidget {
   final String groupId;
 
   const GroupSettlementView({
-    Key? key,
+    super.key,
     required this.groupId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

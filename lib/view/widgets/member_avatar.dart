@@ -8,11 +8,11 @@ class MemberAvatar extends StatelessWidget {
   final bool showBorder;
 
   const MemberAvatar({
-    Key? key,
+    super.key,
     required this.member,
     this.size = 40,
     this.showBorder = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

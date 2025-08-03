@@ -125,9 +125,9 @@ class ExpenseListView extends ConsumerStatefulWidget {
   final String groupId;
 
   const ExpenseListView({
-    Key? key,
+    super.key,
     required this.groupId,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<ExpenseListView> createState() => _ExpenseListViewState();
@@ -327,11 +327,11 @@ class ExpenseListCard extends StatelessWidget {
   final VoidCallback onDelete;
 
   const ExpenseListCard({
-    Key? key,
+    super.key,
     required this.expense,
     required this.onTap,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

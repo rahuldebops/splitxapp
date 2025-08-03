@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:splitxapp/models/expense.dart';
 import 'package:splitxapp/models/group_member.dart';
-import 'package:splitxapp/helpers/base_view_model.dart';
-import 'package:splitxapp/helpers/base_screen_view.dart';
 
 final expenseViewModelProvider = StateNotifierProvider.family<ExpenseViewModel, ExpenseState, String?>(
   (ref, expenseId) => ExpenseViewModel(expenseId),
