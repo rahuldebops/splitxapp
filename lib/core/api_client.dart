@@ -16,42 +16,69 @@ class ApiClient {
   }
 
   Future<Response<Map<String, dynamic>>> post(
-    String path,
-    dynamic data,
-  ) async {
-    try {
-      final String timeZone = await FlutterTimezone.getLocalTimezone();
-      return await dio.post(
-        path,
-        data: data,
-        options: Options(
-          headers: {
-            "Authorization": "Bearer ${AppConstants.token}",
-            "X-TimeZone": timeZone,
-          },
-        ),
-      );
-    } on DioException catch (e) {
-      Logger.write(e.response?.data["message"]);
-      throw ApiException(e.response?.data["message"]);
-    }
-  }
+  String path,
+  dynamic data,
+) async {
+  try {
+    final String timeZone = await FlutterTimezone.getLocalTimezone();
+    final String fullUrl = "${dio.options.baseUrl}$path";
 
-  Future<Response<Map<String, dynamic>>> get(String path) async {
-    try {
-      return await dio.get(
-        path,
-        options: Options(
-          headers: {
-            "Authorization": "Bearer ${AppConstants.token}",
-          },
-        ),
-      );
-    } on DioException catch (e) {
-      Logger.write(e.response?.data["message"]);
-      throw ApiException(e.response?.data["message"]);
-    }
+    // Log as curl
+    Logger.write(Logger.buildCurlCommand(
+      method: "POST",
+      url: fullUrl,
+      headers: {
+        "Authorization": "Bearer ${AppConstants.token}",
+        "X-TimeZone": timeZone,
+      },
+      body: data,
+    ));
+
+    return await dio.post(
+      path,
+      data: data,
+      options: Options(
+        headers: {
+          "Authorization": "Bearer ${AppConstants.token}",
+          "X-TimeZone": timeZone,
+        },
+      ),
+    );
+  } on DioException catch (e) {
+    Logger.write("POST Error on $path: ${e.response?.data["message"]}");
+    throw ApiException(e.response?.data["message"]);
   }
+}
+
+Future<Response<Map<String, dynamic>>> get(String path) async {
+  try {
+    final String timeZone = await FlutterTimezone.getLocalTimezone();
+    final String fullUrl = "${dio.options.baseUrl}$path";
+
+    // Log as curl
+    Logger.write(Logger.buildCurlCommand(
+      method: "GET",
+      url: fullUrl,
+      headers: {
+        "Authorization": "Bearer ${AppConstants.token}",
+        "X-TimeZone": timeZone,
+      },
+    ));
+
+    return await dio.get(
+      path,
+      options: Options(
+        headers: {
+          "Authorization": "Bearer ${AppConstants.token}",
+          "X-TimeZone": timeZone,
+        },
+      ),
+    );
+  } on DioException catch (e) {
+    Logger.write("GET Error on $path: ${e.response?.data["message"]}");
+    throw ApiException(e.response?.data["message"]);
+  }
+}
 }
 
 class MultiPartClient extends http.BaseClient {

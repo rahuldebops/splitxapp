@@ -126,7 +126,7 @@ class ExpenseViewModel extends StateNotifier<ExpenseState> {
     final members = [
       GroupMember(
         id: '1',
-        name: 'John Doe',
+        name: 'John Doe2',
         email: 'john@example.com',
         color: Colors.blue,
         isCurrentUser: true,

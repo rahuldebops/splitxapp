@@ -66,7 +66,7 @@ class _ExpenseDetailViewState extends ConsumerState<ExpenseDetailView> {
       groupMembers = [
         GroupMember(
           id: '1',
-          name: 'John Doe',
+          name: 'John Doe4',
           email: 'john@example.com',
           color: Colors.blue,
           isCurrentUser: true,

@@ -11,7 +11,7 @@ Future<bool> decodeAndSetUserFromToken({
     if (JwtDecoder.isExpired(token)) return false;
 
     final decoded = JwtDecoder.decode(token);
-    final user = UserModel.fromJwt(decoded);
+    final user = UserModel.fromJwt(decoded, token, "");
 
     ref.read(userSessionProvider.notifier).setUser(user); // Still valid
     return true;
