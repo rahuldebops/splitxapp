@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splitxapp/core/constants.dart';
+import 'package:splitxapp/core/exception.dart';
 import 'package:splitxapp/data/auth/auth_repo.dart';
 import 'package:splitxapp/data/auth/models/login/login_request_model.dart';
+import 'package:splitxapp/data/auth/models/login/login_response_model.dart';
 import 'package:splitxapp/domain/provider/user_session_provider.dart';
 import 'package:splitxapp/domain/provider/repository_provider.dart';
 import 'package:splitxapp/helpers/base_screen_view.dart';
 import 'package:splitxapp/helpers/base_view_model.dart';
 import 'package:splitxapp/routes/app_routes.dart';
-import 'package:splitxapp/utils/jwt_utils.dart';
+import 'package:splitxapp/services/token_manager.dart';
+import 'package:splitxapp/utils/extensions.dart';
 
 final loginViewModel = ChangeNotifierProvider(
   (ref) => LoginViewModel(ref.read(authRepo), ref),
@@ -21,7 +22,6 @@ class LoginViewModel extends BaseViewModel<BaseScreenView> {
   final Ref _ref;
 
   LoginViewModel(this._authRepo, this._ref);
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<void> login(BuildContext context, LoginRequestModel req) async {
     try {
@@ -30,29 +30,17 @@ class LoginViewModel extends BaseViewModel<BaseScreenView> {
 
       await _authRepo
           .login(req)
-          .then(
-            (onValue) => onValue.fold(
-              (left) async {
-                view?.showSnackbar(left.message, color: Colors.red);
-              },
-              (right) async {
-                final SharedPreferences prefs = await _prefs;
-                String token = right.result.accessToken;
-
-                prefs.setString(AppConstants.tokenPref, token);
-                if (token.isNotEmpty) {
-                  final isValid = await decodeAndSetUserFromToken(
-                    token: token,
-                    ref: _ref,
-                  );
-                  if (isValid) {
-                    notifyListeners();
-                    view?.showSnackbar(right.message, color: Colors.green);
-                    context.pushReplacementNamed(AppRoute.home.name);
-                  }
-                }
-              },
-            ),
+          .handle(
+            onRight: (LoginResponseModel right) async {
+              final tokenManager = _ref.read(tokenManagerProvider);
+              await tokenManager.saveTokens(right.result.accessToken, right.result.refreshToken);
+              notifyListeners();
+              view?.showSnackbar(right.message, color: Colors.green);
+              context.pushReplacementNamed(AppRoute.home.name);
+            },
+            onLeft: (ApiException left) {
+              view?.showSnackbar(left.message, color: Colors.red);
+            },
           );
       await Future.delayed(const Duration(milliseconds: 500));
     } catch (e) {
@@ -110,22 +98,22 @@ class LoginViewModel extends BaseViewModel<BaseScreenView> {
   }
 
   Future<void> logout(BuildContext context) async {
-    try {
-      // 1. Clear token from local storage
-      final SharedPreferences prefs = await _prefs;
-      await prefs.remove(AppConstants.tokenPref);
-      AppConstants.token = "";
+  try {
+    // 1. Clear all tokens from secure storage (RECOMMENDED)
+    final tokenManager = _ref.read(tokenManagerProvider);
+    await tokenManager.clearTokens(); // Uses TokenService under the hood
 
-      // 2. Clear in-memory user session
-      _ref.read(userSessionProvider.notifier).clear();
+    // 2. Clear in-memory user/session data as usual
+    _ref.read(userSessionProvider.notifier).clear();
 
-      // 3. Navigate to login screen
-      context.goNamed(AppRoute.login.name);
+    // 3. Navigate to login screen (replace current)
+    context.goNamed(AppRoute.login.name);
 
-      // 4. Optional: Show snackbar
-      view?.showSnackbar("Logged out successfully.", color: Colors.green);
-    } catch (e) {
-      view?.showSnackbar("Logout failed. Please try again.", color: Colors.red);
-    }
+    // 4. Optional: Show a logout notification
+    view?.showSnackbar("Logged out successfully.", color: Colors.green);
+  } catch (e) {
+    view?.showSnackbar("Logout failed. Please try again.", color: Colors.red);
   }
+}
+
 }

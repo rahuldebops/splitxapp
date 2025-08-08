@@ -12,6 +12,8 @@ import 'package:splitxapp/domain/provider/repository_provider.dart';
 import 'package:splitxapp/helpers/base_screen_view.dart';
 import 'package:splitxapp/helpers/base_view_model.dart';
 import 'package:splitxapp/routes/app_routes.dart';
+import 'package:splitxapp/services/token_manager.dart';
+import 'package:splitxapp/services/token_service.dart';
 import 'package:splitxapp/utils/extensions.dart';
 import 'package:splitxapp/utils/jwt_utils.dart';
 
@@ -24,7 +26,6 @@ class SignupViewModel extends BaseViewModel<BaseScreenView> {
   final Ref _ref;
 
   SignupViewModel(this._authRepo, this._ref);
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<void> signup(BuildContext context, RegisterRequestModel req) async {
     try {
@@ -36,21 +37,12 @@ class SignupViewModel extends BaseViewModel<BaseScreenView> {
           .register(req)
           .handle(
             onRight: (RegisterResponseModel right) async {
-              final SharedPreferences prefs = await _prefs;
-              String token = right.result.accessToken;
-
-              prefs.setString(AppConstants.tokenPref, token);
-              if (token.isNotEmpty) {
-                final isValid = await decodeAndSetUserFromToken(
-                  token: token,
-                  ref: _ref,
-                );
-                if (isValid) {
-                  notifyListeners();
-                  view?.showSnackbar(right.message, color: Colors.green);
-                  context.pushReplacementNamed(AppRoute.home.name);
-                }
-              }
+              final tokenManager = _ref.read(tokenManagerProvider);
+              await tokenManager.saveTokens(right.result.accessToken, right.result.refreshToken);
+              notifyListeners();
+              
+              view?.showSnackbar(right.message, color: Colors.green);
+              context.pushReplacementNamed(AppRoute.home.name);
             },
             onLeft: (ApiException left) {
               view?.showSnackbar(left.message, color: Colors.red);
