@@ -1,9 +1,11 @@
+// view/screens/splash/splash_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:splitxapp/helpers/base_screen_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:splitxapp/routes/app_routes.dart';
+import 'package:splitxapp/services/token_service.dart';
+import 'package:splitxapp/services/token_manager.dart';
 import 'package:splitxapp/utils/colors.dart';
-import 'package:splitxapp/view/screens/splash/splash_view_model.dart';
 
 class SplashView extends ConsumerStatefulWidget {
   const SplashView({super.key});
@@ -12,65 +14,45 @@ class SplashView extends ConsumerStatefulWidget {
   ConsumerState<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends ConsumerState<SplashView> with BaseScreenView {
-  late final SplashViewModel _viewModel;
-  late AssetImage myAssetImage;
-
+class _SplashViewState extends ConsumerState<SplashView> {
   @override
   void initState() {
     super.initState();
-    myAssetImage = const AssetImage("assets/images/splash.gif");
-    _viewModel = ref.read(splashViewModel);
-    _viewModel.attachView(this);
-    Future.delayed(const Duration(seconds: 3))
-        .then((value) async => _viewModel.GoToHome(context, ref));
+    _checkAuth();
+  }
+
+  Future<void> _checkAuth() async {
+    final tokenManager = ref.read(tokenManagerProvider);
+
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    final accessToken = await tokenManager.getToken();
+    final refreshToken = await TokenService.getRefreshToken();
+
+    if (accessToken != null && accessToken.isNotEmpty) {
+      context.goNamed(AppRoute.home.name);
+    } else if (refreshToken != null && refreshToken.isNotEmpty) {
+      final refreshed = await tokenManager.refreshToken();
+      if (refreshed) {
+        context.goNamed(AppRoute.home.name);
+      } else {
+        context.goNamed(AppRoute.login.name);
+      }
+    } else {
+      context.goNamed(AppRoute.login.name);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimaryColor,
-      body: Hero(
-        tag: "splash",
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: myAssetImage,
-            ),
-          ),
+      backgroundColor: kWhite, // match your theme
+      body: Center(
+        child: Image.asset(
+          'assets/images/splash.gif', // put your splash logo here
+          width: 180,
         ),
       ),
     );
-  }
-
-  @override
-  void showSnackbar(String message, {Color? color}) {
-    final snackBar = SnackBar(
-      backgroundColor: color,
-      content: Text(message),
-      action: SnackBarAction(
-        label: 'Close',
-        onPressed: () {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          // Some code to undo the change.
-        },
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    // TODO: implement showSnackbar
-  }
-
-  @override
-  void navigateToScreen(AppRoute appRoute, {Map<String, String>? params}) {
-    // TODO: implement navigateToScreen
-  }
-
-  @override
-  void navigateToScreenAsFirst(AppRoute appRoute,
-      {Map<String, String>? params}) {
-    // TODO: implement navigateToScreenAsFirst
   }
 }

@@ -12,65 +12,77 @@ class ApiClient {
   ApiClient() {
     dio.options.connectTimeout = const Duration(milliseconds: 9000);
     dio.options.receiveTimeout = const Duration(milliseconds: 9000);
-
-    dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          final accessToken = await TokenService.getAccessToken();
-          final timeZone = await FlutterTimezone.getLocalTimezone();
-          if (accessToken != null && accessToken.isNotEmpty) {
-            options.headers['Authorization'] = 'Bearer $accessToken';
-          }
-          options.headers['X-TimeZone'] = timeZone;
-          handler.next(options);
-        },
-        onError: (e, handler) async {
-          if (e.response?.statusCode == 401) {
-            // Try refresh
-            final refreshed = await _tryRefreshToken();
-            if (refreshed) {
-              final requestOptions = e.requestOptions;
-              requestOptions.headers['Authorization'] =
-                  'Bearer ${(await TokenService.getAccessToken()) ?? ""}';
-              final cloned = await dio.fetch(requestOptions);
-              return handler.resolve(cloned);
-            } else {
-              return handler.reject(
-                DioException(
-                  requestOptions: e.requestOptions,
-                  error: 'Unauthorized',
-                  type: DioExceptionType.badResponse,
-                  response: e.response,
-                ),
-              );
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final accessToken = await TokenService.getAccessToken();
+        final timeZone = await FlutterTimezone.getLocalTimezone();
+        if (accessToken != null && accessToken.isNotEmpty) {
+          options.headers['Authorization'] = 'Bearer $accessToken';
+        }
+        options.headers['X-TimeZone'] = timeZone;
+        return handler.next(options);
+      },
+      onError: (e, handler) async {
+        if (e.response?.statusCode == 401) {
+          // Try to refresh the token
+          final refreshed = await tryRefreshToken();
+          if (refreshed) {
+            // Retry the original request with the new token
+            final requestOptions = e.requestOptions;
+            requestOptions.headers['Authorization'] =
+                'Bearer ${(await TokenService.getAccessToken()) ?? ""}';
+            try {
+              final response = await dio.fetch(requestOptions);
+              return handler.resolve(response);
+            } on DioException catch (retryError) {
+              return handler.reject(retryError);
             }
           }
-          handler.next(e);
-        },
-      ),
-    );
+          // If refresh fails, reject the request and trigger logout flow
+          await TokenService.clearTokens();
+          return handler.reject(DioException(
+            requestOptions: e.requestOptions,
+            error: 'Unauthorized. Refresh failed.',
+            type: DioExceptionType.badResponse,
+            response: e.response,
+          ));
+        }
+        return handler.next(e);
+      },
+    ));
   }
 
-  Future<bool> _tryRefreshToken() async {
+  Future<bool> tryRefreshToken() async {
     final refreshToken = await TokenService.getRefreshToken();
-    if (refreshToken == null || refreshToken.isEmpty) return false;
+    if (refreshToken == null || refreshToken.isEmpty) {
+      Logger.write("No refresh token available.", isError: true);
+      return false;
+    }
+
     try {
       final res = await dio.post(
         '${AppConstants.baseUrl}/Auth/refresh',
         data: {'refreshToken': refreshToken},
       );
+
       if (res.statusCode == 200 && res.data != null) {
         final accessToken = res.data['result']?['accessToken'] ?? "";
         final newRefreshToken = res.data['result']?['refreshToken'] ?? "";
+
         if (accessToken.isNotEmpty && newRefreshToken.isNotEmpty) {
           await TokenService.saveTokens(
             accessToken: accessToken,
             refreshToken: newRefreshToken,
           );
+          Logger.write("Token refreshed successfully.");
           return true;
         }
       }
-    } catch (_) {}
+    } catch (err) {
+      Logger.write("Failed to refresh token: ${err.toString()}", isError: true);
+    }
+    
+    // If refresh fails for any reason, clear tokens
     await TokenService.clearTokens();
     return false;
   }
@@ -83,17 +95,17 @@ class ApiClient {
     }
   }
 
-  Future<Response<Map<String, dynamic>>> get(
-    String path, {
-    Map<String, dynamic>? queryParameters,
-  }) async {
+  Future<Response<Map<String, dynamic>>> get(String path, {Map<String, dynamic>? queryParameters}) async {
     try {
       return await dio.get(path, queryParameters: queryParameters);
     } on DioException catch (e) {
       throw ApiException(e.response?.data["message"] ?? "GET error");
     }
   }
+  
+    
 }
+
 
 class MultiPartClient extends http.BaseClient {
   final http.Client _httpClient = http.Client();

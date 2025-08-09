@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splitxapp/core/constants.dart';
 import 'package:splitxapp/core/exception.dart';
 import 'package:splitxapp/data/auth/auth_repo.dart';
 import 'package:splitxapp/data/auth/models/register/register_request_model.dart';
@@ -13,9 +11,7 @@ import 'package:splitxapp/helpers/base_screen_view.dart';
 import 'package:splitxapp/helpers/base_view_model.dart';
 import 'package:splitxapp/routes/app_routes.dart';
 import 'package:splitxapp/services/token_manager.dart';
-import 'package:splitxapp/services/token_service.dart';
 import 'package:splitxapp/utils/extensions.dart';
-import 'package:splitxapp/utils/jwt_utils.dart';
 
 final signupViewModel = ChangeNotifierProvider(
   (ref) => SignupViewModel(ref.read(authRepo), ref),

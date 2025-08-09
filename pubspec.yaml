@@ -25,6 +25,7 @@ dependencies:
   dynamic_color: ^1.6.5
   jwt_decoder: ^2.0.1
   flutter_secure_storage: ^9.2.4
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -35,3 +36,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/splash.gif
+    
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/ic_launcher.png"
+
