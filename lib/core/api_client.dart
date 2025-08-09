@@ -83,9 +83,12 @@ class ApiClient {
     }
   }
 
-  Future<Response<Map<String, dynamic>>> get(String path) async {
+  Future<Response<Map<String, dynamic>>> get(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
-      return await dio.get(path);
+      return await dio.get(path, queryParameters: queryParameters);
     } on DioException catch (e) {
       throw ApiException(e.response?.data["message"] ?? "GET error");
     }
