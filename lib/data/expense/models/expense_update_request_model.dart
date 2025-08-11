@@ -13,7 +13,7 @@ ExpenseUpdateRequestModel expenseUpdateRequestModelFromJson(String str) => Expen
 String expenseUpdateRequestModelToJson(ExpenseUpdateRequestModel data) => json.encode(data.toJson());
 
 @freezed
-class ExpenseUpdateRequestModel with _$ExpenseUpdateRequestModel {
+abstract class ExpenseUpdateRequestModel with _$ExpenseUpdateRequestModel {
     const factory ExpenseUpdateRequestModel({
         required String expenseId,
         required String groupId,
@@ -27,7 +27,7 @@ class ExpenseUpdateRequestModel with _$ExpenseUpdateRequestModel {
 }
 
 @freezed
-class Payment with _$Payment {
+abstract class Payment with _$Payment {
     const factory Payment({
         required String paidBy,
         required int amount,
@@ -37,7 +37,7 @@ class Payment with _$Payment {
 }
 
 @freezed
-class Split with _$Split {
+abstract class Split with _$Split {
     const factory Split({
         required String userId,
         required int owedAmount,

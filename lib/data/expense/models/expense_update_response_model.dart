@@ -13,7 +13,7 @@ ExpenseUpdateResponseModel expenseUpdateResponseModelFromJson(String str) => Exp
 String expenseUpdateResponseModelToJson(ExpenseUpdateResponseModel data) => json.encode(data.toJson());
 
 @freezed
-class ExpenseUpdateResponseModel with _$ExpenseUpdateResponseModel {
+abstract class ExpenseUpdateResponseModel with _$ExpenseUpdateResponseModel {
     const factory ExpenseUpdateResponseModel({
         required bool result,
         required String message,
