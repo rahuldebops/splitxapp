@@ -14,17 +14,13 @@ RefreshTokenRequestModel refreshTokenRequestModelFromJson(String str) => Refresh
 String refreshTokenRequestModelToJson(RefreshTokenRequestModel data) => json.encode(data.toJson());
 
 @freezed
-class RefreshTokenRequestModel with _$RefreshTokenRequestModel {
+abstract class RefreshTokenRequestModel with _$RefreshTokenRequestModel {
     const factory RefreshTokenRequestModel({
         @JsonKey(name: "refreshToken")
         required String refreshToken,
     }) = _RefreshTokenRequestModel;
 
     factory RefreshTokenRequestModel.fromJson(Map<String, dynamic> json) => _$RefreshTokenRequestModelFromJson(json);
-    
-      @override
-      // TODO: implement refreshToken
-      String get refreshToken => throw UnimplementedError();
     
       @override
       Map<String, dynamic> toJson() {

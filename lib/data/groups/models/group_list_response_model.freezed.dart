@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GroupListResponseModel {
 
-@JsonKey(name: "result") Result get result;@JsonKey(name: "message") String get message;@JsonKey(name: "errorCode") dynamic get errorCode;
+ Result get result; String get message; dynamic get errorCode;
 /// Create a copy of GroupListResponseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $GroupListResponseModelCopyWith<$Res>  {
   factory $GroupListResponseModelCopyWith(GroupListResponseModel value, $Res Function(GroupListResponseModel) _then) = _$GroupListResponseModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "result") Result result,@JsonKey(name: "message") String message,@JsonKey(name: "errorCode") dynamic errorCode
+ Result result, String message, dynamic errorCode
 });
 
 
@@ -164,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "result")  Result result, @JsonKey(name: "message")  String message, @JsonKey(name: "errorCode")  dynamic errorCode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Result result,  String message,  dynamic errorCode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GroupListResponseModel() when $default != null:
 return $default(_that.result,_that.message,_that.errorCode);case _:
@@ -185,7 +185,7 @@ return $default(_that.result,_that.message,_that.errorCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "result")  Result result, @JsonKey(name: "message")  String message, @JsonKey(name: "errorCode")  dynamic errorCode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Result result,  String message,  dynamic errorCode)  $default,) {final _that = this;
 switch (_that) {
 case _GroupListResponseModel():
 return $default(_that.result,_that.message,_that.errorCode);case _:
@@ -205,7 +205,7 @@ return $default(_that.result,_that.message,_that.errorCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "result")  Result result, @JsonKey(name: "message")  String message, @JsonKey(name: "errorCode")  dynamic errorCode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Result result,  String message,  dynamic errorCode)?  $default,) {final _that = this;
 switch (_that) {
 case _GroupListResponseModel() when $default != null:
 return $default(_that.result,_that.message,_that.errorCode);case _:
@@ -220,12 +220,12 @@ return $default(_that.result,_that.message,_that.errorCode);case _:
 @JsonSerializable()
 
 class _GroupListResponseModel implements GroupListResponseModel {
-  const _GroupListResponseModel({@JsonKey(name: "result") required this.result, @JsonKey(name: "message") required this.message, @JsonKey(name: "errorCode") required this.errorCode});
+  const _GroupListResponseModel({required this.result, required this.message, required this.errorCode});
   factory _GroupListResponseModel.fromJson(Map<String, dynamic> json) => _$GroupListResponseModelFromJson(json);
 
-@override@JsonKey(name: "result") final  Result result;
-@override@JsonKey(name: "message") final  String message;
-@override@JsonKey(name: "errorCode") final  dynamic errorCode;
+@override final  Result result;
+@override final  String message;
+@override final  dynamic errorCode;
 
 /// Create a copy of GroupListResponseModel
 /// with the given fields replaced by the non-null parameter values.
@@ -260,7 +260,7 @@ abstract mixin class _$GroupListResponseModelCopyWith<$Res> implements $GroupLis
   factory _$GroupListResponseModelCopyWith(_GroupListResponseModel value, $Res Function(_GroupListResponseModel) _then) = __$GroupListResponseModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "result") Result result,@JsonKey(name: "message") String message,@JsonKey(name: "errorCode") dynamic errorCode
+ Result result, String message, dynamic errorCode
 });
 
 
@@ -302,7 +302,7 @@ $ResultCopyWith<$Res> get result {
 /// @nodoc
 mixin _$Result {
 
-@JsonKey(name: "data") List<Datum> get data;@JsonKey(name: "pageNumber") int get pageNumber;@JsonKey(name: "pageSize") int get pageSize;@JsonKey(name: "totalRecords") int get totalRecords;
+ List<Datum> get data; int get pageNumber; int get pageSize; int get totalRecords;
 /// Create a copy of Result
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -335,7 +335,7 @@ abstract mixin class $ResultCopyWith<$Res>  {
   factory $ResultCopyWith(Result value, $Res Function(Result) _then) = _$ResultCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "data") List<Datum> data,@JsonKey(name: "pageNumber") int pageNumber,@JsonKey(name: "pageSize") int pageSize,@JsonKey(name: "totalRecords") int totalRecords
+ List<Datum> data, int pageNumber, int pageSize, int totalRecords
 });
 
 
@@ -443,7 +443,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "data")  List<Datum> data, @JsonKey(name: "pageNumber")  int pageNumber, @JsonKey(name: "pageSize")  int pageSize, @JsonKey(name: "totalRecords")  int totalRecords)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Datum> data,  int pageNumber,  int pageSize,  int totalRecords)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Result() when $default != null:
 return $default(_that.data,_that.pageNumber,_that.pageSize,_that.totalRecords);case _:
@@ -464,7 +464,7 @@ return $default(_that.data,_that.pageNumber,_that.pageSize,_that.totalRecords);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "data")  List<Datum> data, @JsonKey(name: "pageNumber")  int pageNumber, @JsonKey(name: "pageSize")  int pageSize, @JsonKey(name: "totalRecords")  int totalRecords)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Datum> data,  int pageNumber,  int pageSize,  int totalRecords)  $default,) {final _that = this;
 switch (_that) {
 case _Result():
 return $default(_that.data,_that.pageNumber,_that.pageSize,_that.totalRecords);case _:
@@ -484,7 +484,7 @@ return $default(_that.data,_that.pageNumber,_that.pageSize,_that.totalRecords);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "data")  List<Datum> data, @JsonKey(name: "pageNumber")  int pageNumber, @JsonKey(name: "pageSize")  int pageSize, @JsonKey(name: "totalRecords")  int totalRecords)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Datum> data,  int pageNumber,  int pageSize,  int totalRecords)?  $default,) {final _that = this;
 switch (_that) {
 case _Result() when $default != null:
 return $default(_that.data,_that.pageNumber,_that.pageSize,_that.totalRecords);case _:
@@ -499,19 +499,19 @@ return $default(_that.data,_that.pageNumber,_that.pageSize,_that.totalRecords);c
 @JsonSerializable()
 
 class _Result implements Result {
-  const _Result({@JsonKey(name: "data") required final  List<Datum> data, @JsonKey(name: "pageNumber") required this.pageNumber, @JsonKey(name: "pageSize") required this.pageSize, @JsonKey(name: "totalRecords") required this.totalRecords}): _data = data;
+  const _Result({required final  List<Datum> data, required this.pageNumber, required this.pageSize, required this.totalRecords}): _data = data;
   factory _Result.fromJson(Map<String, dynamic> json) => _$ResultFromJson(json);
 
  final  List<Datum> _data;
-@override@JsonKey(name: "data") List<Datum> get data {
+@override List<Datum> get data {
   if (_data is EqualUnmodifiableListView) return _data;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_data);
 }
 
-@override@JsonKey(name: "pageNumber") final  int pageNumber;
-@override@JsonKey(name: "pageSize") final  int pageSize;
-@override@JsonKey(name: "totalRecords") final  int totalRecords;
+@override final  int pageNumber;
+@override final  int pageSize;
+@override final  int totalRecords;
 
 /// Create a copy of Result
 /// with the given fields replaced by the non-null parameter values.
@@ -546,7 +546,7 @@ abstract mixin class _$ResultCopyWith<$Res> implements $ResultCopyWith<$Res> {
   factory _$ResultCopyWith(_Result value, $Res Function(_Result) _then) = __$ResultCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "data") List<Datum> data,@JsonKey(name: "pageNumber") int pageNumber,@JsonKey(name: "pageSize") int pageSize,@JsonKey(name: "totalRecords") int totalRecords
+ List<Datum> data, int pageNumber, int pageSize, int totalRecords
 });
 
 
@@ -580,7 +580,7 @@ as int,
 /// @nodoc
 mixin _$Datum {
 
-@JsonKey(name: "groupId") String get groupId;@JsonKey(name: "name") String get name;@JsonKey(name: "currency") String get currency;
+ String get groupId; String get name; String get currency;
 /// Create a copy of Datum
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -613,7 +613,7 @@ abstract mixin class $DatumCopyWith<$Res>  {
   factory $DatumCopyWith(Datum value, $Res Function(Datum) _then) = _$DatumCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "groupId") String groupId,@JsonKey(name: "name") String name,@JsonKey(name: "currency") String currency
+ String groupId, String name, String currency
 });
 
 
@@ -720,7 +720,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "groupId")  String groupId, @JsonKey(name: "name")  String name, @JsonKey(name: "currency")  String currency)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String groupId,  String name,  String currency)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Datum() when $default != null:
 return $default(_that.groupId,_that.name,_that.currency);case _:
@@ -741,7 +741,7 @@ return $default(_that.groupId,_that.name,_that.currency);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "groupId")  String groupId, @JsonKey(name: "name")  String name, @JsonKey(name: "currency")  String currency)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String groupId,  String name,  String currency)  $default,) {final _that = this;
 switch (_that) {
 case _Datum():
 return $default(_that.groupId,_that.name,_that.currency);case _:
@@ -761,7 +761,7 @@ return $default(_that.groupId,_that.name,_that.currency);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "groupId")  String groupId, @JsonKey(name: "name")  String name, @JsonKey(name: "currency")  String currency)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String groupId,  String name,  String currency)?  $default,) {final _that = this;
 switch (_that) {
 case _Datum() when $default != null:
 return $default(_that.groupId,_that.name,_that.currency);case _:
@@ -776,12 +776,12 @@ return $default(_that.groupId,_that.name,_that.currency);case _:
 @JsonSerializable()
 
 class _Datum implements Datum {
-  const _Datum({@JsonKey(name: "groupId") required this.groupId, @JsonKey(name: "name") required this.name, @JsonKey(name: "currency") required this.currency});
+  const _Datum({required this.groupId, required this.name, required this.currency});
   factory _Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
 
-@override@JsonKey(name: "groupId") final  String groupId;
-@override@JsonKey(name: "name") final  String name;
-@override@JsonKey(name: "currency") final  String currency;
+@override final  String groupId;
+@override final  String name;
+@override final  String currency;
 
 /// Create a copy of Datum
 /// with the given fields replaced by the non-null parameter values.
@@ -816,7 +816,7 @@ abstract mixin class _$DatumCopyWith<$Res> implements $DatumCopyWith<$Res> {
   factory _$DatumCopyWith(_Datum value, $Res Function(_Datum) _then) = __$DatumCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "groupId") String groupId,@JsonKey(name: "name") String name,@JsonKey(name: "currency") String currency
+ String groupId, String name, String currency
 });
 
 

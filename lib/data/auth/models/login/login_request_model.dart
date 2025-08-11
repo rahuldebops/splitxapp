@@ -8,32 +8,25 @@ import 'dart:convert';
 part 'login_request_model.freezed.dart';
 part 'login_request_model.g.dart';
 
-LoginRequestModel loginRequestModelFromJson(String str) => LoginRequestModel.fromJson(json.decode(str));
+LoginRequestModel loginRequestModelFromJson(String str) =>
+    LoginRequestModel.fromJson(json.decode(str));
 
-String loginRequestModelToJson(LoginRequestModel data) => json.encode(data.toJson());
+String loginRequestModelToJson(LoginRequestModel data) =>
+    json.encode(data.toJson());
 
 @freezed
-class LoginRequestModel with _$LoginRequestModel {
-    const factory LoginRequestModel({
-        @JsonKey(name: "email")
-        required String email,
-        @JsonKey(name: "password")
-        required String password,
-    }) = _LoginRequestModel;
+abstract class LoginRequestModel with _$LoginRequestModel {
+  const factory LoginRequestModel({
+    @JsonKey(name: "email") required String email,
+    @JsonKey(name: "password") required String password,
+  }) = _LoginRequestModel;
 
-    factory LoginRequestModel.fromJson(Map<String, dynamic> json) => _$LoginRequestModelFromJson(json);
-    
-      @override
-      // TODO: implement email
-      String get email => throw UnimplementedError();
-    
-      @override
-      // TODO: implement password
-      String get password => throw UnimplementedError();
-    
-      @override
-      Map<String, dynamic> toJson() {
+  factory LoginRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$LoginRequestModelFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() {
     // TODO: implement toJson
     throw UnimplementedError();
-      }
+  }
 }

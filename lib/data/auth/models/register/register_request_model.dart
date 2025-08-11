@@ -13,7 +13,7 @@ RegisterRequestModel registerRequestModelFromJson(String str) => RegisterRequest
 String registerRequestModelToJson(RegisterRequestModel data) => json.encode(data.toJson());
 
 @freezed
-class RegisterRequestModel with _$RegisterRequestModel {
+abstract class RegisterRequestModel with _$RegisterRequestModel {
     const factory RegisterRequestModel({
         @JsonKey(name: "fullName")
         required String fullName,
@@ -26,22 +26,6 @@ class RegisterRequestModel with _$RegisterRequestModel {
     }) = _RegisterRequestModel;
 
     factory RegisterRequestModel.fromJson(Map<String, dynamic> json) => _$RegisterRequestModelFromJson(json);
-    
-      @override
-      // TODO: implement email
-      String get email => throw UnimplementedError();
-    
-      @override
-      // TODO: implement fullName
-      String get fullName => throw UnimplementedError();
-    
-      @override
-      // TODO: implement password
-      String get password => throw UnimplementedError();
-    
-      @override
-      // TODO: implement phone
-      String get phone => throw UnimplementedError();
     
       @override
       Map<String, dynamic> toJson() {
