@@ -1,7 +1,7 @@
 // view/screens/group/group_expenses_view_model.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:splitxapp/data/expenses/expense_repo.dart';
+import 'package:splitxapp/data/expense/expense_repo.dart';
 import 'package:splitxapp/domain/provider/repository_provider.dart';
 import 'package:splitxapp/models/api_query.dart';
 import 'package:splitxapp/models/expense.dart';

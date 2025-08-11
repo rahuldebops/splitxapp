@@ -26,7 +26,7 @@ class Environment {
     } catch (e) {
       Logger.write(e.toString());
     }
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiMode.values);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
         .then((_) {
       runApp(

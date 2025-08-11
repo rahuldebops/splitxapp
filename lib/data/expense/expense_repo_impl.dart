@@ -4,8 +4,8 @@ import 'package:splitxapp/core/api_client.dart';
 import 'package:splitxapp/core/constants.dart';
 import 'package:splitxapp/core/endpoints.dart';
 import 'package:splitxapp/core/exception.dart';
-import 'package:splitxapp/data/expenses/expense_repo.dart';
-import 'package:splitxapp/data/expenses/models/expense_list_response_model.dart';
+import 'package:splitxapp/data/expense/expense_repo.dart';
+import 'package:splitxapp/data/expense/models/expense_list_response_model.dart';
 import 'package:splitxapp/models/api_query.dart';
 import 'package:splitxapp/utils/logger.dart';
 
