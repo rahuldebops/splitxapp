@@ -19,7 +19,7 @@ class CustomBottomNavbar extends ConsumerWidget {
         height: 60,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildNavItem(
               context,
@@ -38,8 +38,7 @@ class CustomBottomNavbar extends ConsumerWidget {
               label: 'Friends',
               index: 1,
               isActive: currentIndex == 1,
-            ),
-            const SizedBox(width: 40), // Space for FAB
+            ),// Space for FAB
             _buildNavItem(
               context,
               ref,

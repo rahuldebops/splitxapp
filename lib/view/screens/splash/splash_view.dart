@@ -49,8 +49,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
       backgroundColor: kWhite, // match your theme
       body: Center(
         child: Image.asset(
-          'assets/images/splash.gif', // put your splash logo here
-          width: 180,
+          'assets/images/splash.gif',
         ),
       ),
     );
