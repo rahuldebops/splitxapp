@@ -1,4 +1,3 @@
-// view/screens/expense/expense_form_view_model.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:splitxapp/data/expense/expense_repo.dart';
@@ -16,6 +15,13 @@ final expenseFormViewModelProvider = StateNotifierProvider.family<ExpenseFormVie
   return ExpenseFormViewModel(groupId, expenseRepo, groupRepoo);
 });
 
+enum BalanceStatus {
+  balanced,
+  paymentImbalanced,
+  splitImbalanced,
+  bothImbalanced,
+}
+
 class ExpenseFormState {
   final bool loading;
   final List<GroupMember> groupMembers;
@@ -27,6 +33,8 @@ class ExpenseFormState {
   final SplitMode splitMode;
   final double totalAmount;
   final String? error;
+  final String? successMessage;
+  final BalanceStatus balanceStatus;
 
   ExpenseFormState({
     this.loading = false,
@@ -39,7 +47,19 @@ class ExpenseFormState {
     this.splitMode = SplitMode.equally,
     this.totalAmount = 0.0,
     this.error,
+    this.successMessage,
+    this.balanceStatus = BalanceStatus.balanced,
   });
+
+  // Balance calculations
+  double get totalPayments => payerAmounts.values.fold(0.0, (sum, amount) => sum + amount);
+  double get totalSplits => splitAmounts.values.fold(0.0, (sum, amount) => sum + amount);
+  double get paymentDifference => totalAmount - totalPayments;
+  double get splitDifference => totalAmount - totalSplits;
+  
+  bool get isPaymentBalanced => paymentDifference.abs() < 0.01;
+  bool get isSplitBalanced => splitDifference.abs() < 0.01;
+  bool get isCompletelyBalanced => isPaymentBalanced && isSplitBalanced;
 
   ExpenseFormState copyWith({
     bool? loading,
@@ -52,6 +72,8 @@ class ExpenseFormState {
     SplitMode? splitMode,
     double? totalAmount,
     String? error,
+    String? successMessage,
+    BalanceStatus? balanceStatus,
   }) {
     return ExpenseFormState(
       loading: loading ?? this.loading,
@@ -64,6 +86,8 @@ class ExpenseFormState {
       splitMode: splitMode ?? this.splitMode,
       totalAmount: totalAmount ?? this.totalAmount,
       error: error ?? this.error,
+      successMessage: successMessage ?? this.successMessage,
+      balanceStatus: balanceStatus ?? this.balanceStatus,
     );
   }
 }
@@ -73,103 +97,120 @@ class ExpenseFormViewModel extends StateNotifier<ExpenseFormState> {
   final ExpenseRepo _expenseRepo;
   final GroupRepo _groupRepo;
 
-  ExpenseFormViewModel(this.groupId, this._expenseRepo, this._groupRepo)
-      : super(ExpenseFormState());
+  ExpenseFormViewModel(this.groupId, this._expenseRepo, this._groupRepo) : super(ExpenseFormState());
 
   Future<void> initialize(ExpenseFormMode mode, String? expenseId) async {
-    state = state.copyWith(loading: true);
-    
     try {
-      // Load group members
+      state = state.copyWith(loading: true, error: null);
+      
       await _loadGroupMembers();
       
-      // If updating or viewing, load expense details
       if (mode != ExpenseFormMode.create && expenseId != null) {
         await _loadExpenseDetails(expenseId);
       }
     } catch (e) {
-      state = state.copyWith(error: e.toString());
+      state = state.copyWith(
+        error: _getErrorMessage(e),
+        loading: false,
+      );
     } finally {
       state = state.copyWith(loading: false);
     }
   }
 
   Future<void> _loadGroupMembers() async {
-    // You'll need to add this method to GroupRepo
-    final result = await _groupRepo.getGroupMembers(groupId);
-    result.handle(
-      onRight: (response) {
-        final members = response.result.map((member) => GroupMember(
-          id: member.id,
-          name: member.fullName,
-          email: member.email,
-          color: Colors.blue, // You can assign different colors
-        )).toList();
-        
-        state = state.copyWith(groupMembers: members);
-      },
-      onLeft: (error) {
-        state = state.copyWith(error: error.message);
-      },
-    );
+    try {
+      final result = await _groupRepo.getGroupMembers(groupId);
+      result.handle(
+        onRight: (response) {
+          final members = response.result.map((member) => GroupMember(
+            id: member.id,
+            name: member.fullName,
+            email: member.email,
+            color: _getRandomColor(),
+          )).toList();
+          
+          if (members.isEmpty) {
+            throw Exception('No group members found');
+          }
+          
+          state = state.copyWith(groupMembers: members);
+        },
+        onLeft: (error) {
+          throw Exception(error.message ?? 'Failed to load group members');
+        },
+      );
+    } catch (e) {
+      throw Exception('Error loading group members: ${e.toString()}');
+    }
   }
 
   Future<void> _loadExpenseDetails(String expenseId) async {
-    final result = await _expenseRepo.getExpenseDetails(expenseId);
-    result.handle(
-      onRight: (response) {
-        final expense = response.result;
-        
-        // Map the API response to your UI state
-        final payers = expense.payments.map((payment) => GroupMember(
-          id: payment.paidBy.id,
-          name: payment.paidBy.fullName,
-          email: payment.paidBy.email,
-          color: Colors.blue,
-        )).toList();
-        
-        final splitMembers = expense.splits.map((split) => GroupMember(
-          id: split.user.id,
-          name: split.user.fullName,
-          email: split.user.email,
-          color: Colors.blue,
-        )).toList();
-        
-        final payerAmounts = <String, double>{};
-        for (final payment in expense.payments) {
-          payerAmounts[payment.paidBy.id] = payment.amount;
-        }
-        
-        final splitAmounts = <String, double>{};
-        for (final split in expense.splits) {
-          splitAmounts[split.user.id] = split.owedAmount;
-        }
-        
-        state = state.copyWith(
-          selectedPayers: payers,
-          selectedSplitMembers: splitMembers,
-          payerAmounts: payerAmounts,
-          splitAmounts: splitAmounts,
-          totalAmount: expense.amount,
-          selectedCategory: 'Other', // Default since API doesn't provide category
-        );
-      },
-      onLeft: (error) {
-        state = state.copyWith(error: error.message);
-      },
-    );
+    try {
+      final result = await _expenseRepo.getExpenseDetails(expenseId);
+      result.handle(
+        onRight: (response) {
+          final expense = response.result;
+          
+          final payers = expense.payments.map((payment) => GroupMember(
+            id: payment.paidBy.id,
+            name: payment.paidBy.fullName,
+            email: payment.paidBy.email,
+            color: _getRandomColor(),
+          )).toList();
+
+          final splitMembers = expense.splits.map((split) => GroupMember(
+            id: split.user.id,
+            name: split.user.fullName,
+            email: split.user.email,
+            color: _getRandomColor(),
+          )).toList();
+
+          final payerAmounts = <String, double>{};
+          for (final payment in expense.payments) {
+            payerAmounts[payment.paidBy.id] = payment.amount;
+          }
+
+          final splitAmounts = <String, double>{};
+          for (final split in expense.splits) {
+            splitAmounts[split.user.id] = split.owedAmount;
+          }
+
+          state = state.copyWith(
+            selectedPayers: payers,
+            selectedSplitMembers: splitMembers,
+            payerAmounts: payerAmounts,
+            splitAmounts: splitAmounts,
+            totalAmount: expense.amount,
+            selectedCategory: 'Other',
+          );
+          
+          _updateBalanceStatus();
+        },
+        onLeft: (error) {
+          throw Exception(error.message ?? 'Failed to load expense details');
+        },
+      );
+    } catch (e) {
+      throw Exception('Error loading expense details: ${e.toString()}');
+    }
   }
 
   void selectCategory(String? category) {
-    state = state.copyWith(selectedCategory: category);
+    state = state.copyWith(selectedCategory: category, error: null);
   }
 
   void updateAmount(double amount) {
-    state = state.copyWith(totalAmount: amount);
+    if (amount < 0) return;
+    
+    state = state.copyWith(totalAmount: amount, error: null);
     _recalculateSplits();
+    _updateBalanceStatus();
   }
 
   void addPayer(GroupMember member) {
+    if (state.selectedPayers.any((p) => p.id == member.id)) return;
+    
     final updatedPayers = [...state.selectedPayers, member];
     final updatedAmounts = Map<String, double>.from(state.payerAmounts);
     updatedAmounts[member.id] = 0.0;
@@ -177,7 +218,9 @@ class ExpenseFormViewModel extends StateNotifier<ExpenseFormState> {
     state = state.copyWith(
       selectedPayers: updatedPayers,
       payerAmounts: updatedAmounts,
+      error: null,
     );
+    _updateBalanceStatus();
   }
 
   void removePayer(String memberId) {
@@ -188,19 +231,28 @@ class ExpenseFormViewModel extends StateNotifier<ExpenseFormState> {
     state = state.copyWith(
       selectedPayers: updatedPayers,
       payerAmounts: updatedAmounts,
+      error: null,
     );
+    _updateBalanceStatus();
   }
 
   void updatePayerAmount(String memberId, double amount) {
+    if (amount < 0) return;
+    
     final updatedAmounts = Map<String, double>.from(state.payerAmounts);
     updatedAmounts[memberId] = amount;
-    state = state.copyWith(payerAmounts: updatedAmounts);
+    
+    state = state.copyWith(payerAmounts: updatedAmounts, error: null);
+    _updateBalanceStatus();
   }
 
   void addSplitMember(GroupMember member) {
+    if (state.selectedSplitMembers.any((m) => m.id == member.id)) return;
+    
     final updatedMembers = [...state.selectedSplitMembers, member];
-    state = state.copyWith(selectedSplitMembers: updatedMembers);
+    state = state.copyWith(selectedSplitMembers: updatedMembers, error: null);
     _recalculateSplits();
+    _updateBalanceStatus();
   }
 
   void removeSplitMember(String memberId) {
@@ -211,19 +263,26 @@ class ExpenseFormViewModel extends StateNotifier<ExpenseFormState> {
     state = state.copyWith(
       selectedSplitMembers: updatedMembers,
       splitAmounts: updatedAmounts,
+      error: null,
     );
     _recalculateSplits();
+    _updateBalanceStatus();
   }
 
   void changeSplitMode(SplitMode mode) {
-    state = state.copyWith(splitMode: mode);
+    state = state.copyWith(splitMode: mode, error: null);
     _recalculateSplits();
+    _updateBalanceStatus();
   }
 
   void updateSplitAmount(String memberId, double amount) {
+    if (amount < 0) return;
+    
     final updatedAmounts = Map<String, double>.from(state.splitAmounts);
     updatedAmounts[memberId] = amount;
-    state = state.copyWith(splitAmounts: updatedAmounts);
+    
+    state = state.copyWith(splitAmounts: updatedAmounts, error: null);
+    _updateBalanceStatus();
   }
 
   void _recalculateSplits() {
@@ -239,120 +298,182 @@ class ExpenseFormViewModel extends StateNotifier<ExpenseFormState> {
     }
   }
 
+  void _updateBalanceStatus() {
+    final isPaymentBalanced = state.isPaymentBalanced;
+    final isSplitBalanced = state.isSplitBalanced;
+    
+    BalanceStatus status;
+    if (isPaymentBalanced && isSplitBalanced) {
+      status = BalanceStatus.balanced;
+    } else if (!isPaymentBalanced && !isSplitBalanced) {
+      status = BalanceStatus.bothImbalanced;
+    } else if (!isPaymentBalanced) {
+      status = BalanceStatus.paymentImbalanced;
+    } else {
+      status = BalanceStatus.splitImbalanced;
+    }
+    
+    state = state.copyWith(balanceStatus: status);
+  }
+
   Future<void> submitExpense(
     BuildContext context,
     String description,
     ExpenseFormMode mode,
     String? expenseId,
   ) async {
-    if (!_validateForm()) {
-      _showError(context, 'Please fill all required fields correctly');
-      return;
-    }
-
-    state = state.copyWith(loading: true);
-
     try {
+      // Clear previous messages
+      state = state.copyWith(error: null, successMessage: null);
+      
+      // Validate form
+      final validationError = _validateForm();
+      if (validationError != null) {
+        state = state.copyWith(error: validationError);
+        return;
+      }
+
+      state = state.copyWith(loading: true);
+
       if (mode == ExpenseFormMode.create) {
         await _createExpense(description);
+        state = state.copyWith(successMessage: 'Expense created successfully');
       } else if (mode == ExpenseFormMode.update && expenseId != null) {
         await _updateExpense(expenseId, description);
+        state = state.copyWith(successMessage: 'Expense updated successfully');
       }
-      
+
       Navigator.pop(context);
-      _showSuccess(context, mode == ExpenseFormMode.create 
-          ? 'Expense created successfully' 
-          : 'Expense updated successfully');
     } catch (e) {
-      _showError(context, e.toString());
+      state = state.copyWith(error: _getErrorMessage(e));
     } finally {
       state = state.copyWith(loading: false);
     }
   }
 
   Future<void> _createExpense(String description) async {
-    final payments = state.selectedPayers.map((payer) => create_request_model.Payment(
-      paidBy: payer.id,
-      amount: (state.payerAmounts[payer.id] ?? 0).toInt(),
-    )).toList();
+    try {
+      final payments = state.selectedPayers.map((payer) => create_request_model.Payment(
+        paidBy: payer.id,
+        amount: (state.payerAmounts[payer.id] ?? 0).round(),
+      )).toList();
 
-    final splits = state.selectedSplitMembers.map((member) => create_request_model.Split(
-      userId: member.id,
-      owedAmount: (state.splitAmounts[member.id] ?? 0).toInt(),
-    )).toList();
+      final splits = state.selectedSplitMembers.map((member) => create_request_model.Split(
+        userId: member.id,
+        owedAmount: (state.splitAmounts[member.id] ?? 0).round(),
+      )).toList();
 
-    final request = create_request_model.ExpenseCreateRequestModel(
-      groupId: groupId,
-      description: description,
-      amount: state.totalAmount.toInt(),
-      payments: payments,
-      splits: splits,
-    );
+      final request = create_request_model.ExpenseCreateRequestModel(
+        groupId: groupId,
+        description: description,
+        amount: state.totalAmount.round(),
+        payments: payments,
+        splits: splits,
+      );
 
-    final result = await _expenseRepo.createExpense(request);
-    result.handle(
-      onRight: (response) {
-        // Success handled in submitExpense
-      },
-      onLeft: (error) {
-        throw Exception(error.message);
-      },
-    );
+      final result = await _expenseRepo.createExpense(request);
+      result.handle(
+        onRight: (response) {
+          if (!response.result) {
+            throw Exception(response.message ?? 'Failed to create expense');
+          }
+        },
+        onLeft: (error) {
+          throw Exception(error.message ?? 'Failed to create expense');
+        },
+      );
+    } catch (e) {
+      throw Exception('Create expense error: ${e.toString()}');
+    }
   }
 
   Future<void> _updateExpense(String expenseId, String description) async {
-    final payments = state.selectedPayers.map((payer) => update_request_model.Payment(
-      paidBy: payer.id,
-      amount: (state.payerAmounts[payer.id] ?? 0).toInt(),
-    )).toList();
+    try {
+      final payments = state.selectedPayers.map((payer) => update_request_model.Payment(
+        paidBy: payer.id,
+        amount: (state.payerAmounts[payer.id] ?? 0).round(),
+      )).toList();
 
-    final splits = state.selectedSplitMembers.map((member) => update_request_model.Split(
-      userId: member.id,
-      owedAmount: (state.splitAmounts[member.id] ?? 0).toInt(),
-    )).toList();
+      final splits = state.selectedSplitMembers.map((member) => update_request_model.Split(
+        userId: member.id,
+        owedAmount: (state.splitAmounts[member.id] ?? 0).round(),
+      )).toList();
 
-    final request = update_request_model.ExpenseUpdateRequestModel(
-      expenseId: expenseId,
-      groupId: groupId,
-      description: description,
-      amount: state.totalAmount.toInt(),
-      payments: payments,
-      splits: splits,
-    );
+      final request = update_request_model.ExpenseUpdateRequestModel(
+        expenseId: expenseId,
+        groupId: groupId,
+        description: description,
+        amount: state.totalAmount.round(),
+        payments: payments,
+        splits: splits,
+      );
 
-    final result = await _expenseRepo.updateExpense(expenseId, request);
-    result.handle(
-      onRight: (response) {
-        // Success handled in submitExpense
-      },
-      onLeft: (error) {
-        throw Exception(error.message);
-      },
-    );
+      final result = await _expenseRepo.updateExpense(expenseId, request);
+      result.handle(
+        onRight: (response) {
+          if (!response.result) {
+            throw Exception(response.message ?? 'Failed to update expense');
+          }
+        },
+        onLeft: (error) {
+          throw Exception(error.message ?? 'Failed to update expense');
+        },
+      );
+    } catch (e) {
+      throw Exception('Update expense error: ${e.toString()}');
+    }
   }
 
-  bool _validateForm() {
-    return state.selectedPayers.isNotEmpty &&
-           state.selectedSplitMembers.length >= 2 &&
-           state.totalAmount > 0 &&
-           state.selectedCategory != null;
+  String? _validateForm() {
+    if (state.selectedPayers.isEmpty) {
+      return 'Please select at least one payer';
+    }
+    
+    if (state.selectedSplitMembers.length < 2) {
+      return 'Please select at least 2 members to split the expense';
+    }
+    
+    if (state.totalAmount <= 0) {
+      return 'Please enter a valid amount greater than 0';
+    }
+    
+    if (state.selectedCategory == null) {
+      return 'Please select a category';
+    }
+    
+    if (!state.isCompletelyBalanced) {
+      if (!state.isPaymentBalanced) {
+        return 'Payment amounts must equal the total amount (₹${state.paymentDifference.abs().toStringAsFixed(2)} difference)';
+      }
+      if (!state.isSplitBalanced) {
+        return 'Split amounts must equal the total amount (₹${state.splitDifference.abs().toStringAsFixed(2)} difference)';
+      }
+    }
+    
+    return null;
   }
 
-  void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
+  String _getErrorMessage(dynamic error) {
+    if (error is Exception) {
+      return error.toString().replaceFirst('Exception: ', '');
+    }
+    return error.toString();
   }
 
-  void _showSuccess(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-      ),
-    );
+  Color _getRandomColor() {
+    const colors = [
+      Color(0xFF2563EB), Color(0xFF10B981), Color(0xFFF59E0B),
+      Color(0xFFEF4444), Color(0xFF8B5CF6), Color(0xFF06B6D4),
+      Color(0xFFEC4899), Color(0xFF84CC16), Color(0xFFF97316),
+    ];
+    return colors[DateTime.now().microsecond % colors.length];
+  }
+
+  void clearError() {
+    state = state.copyWith(error: null);
+  }
+
+  void clearSuccess() {
+    state = state.copyWith(successMessage: null);
   }
 }

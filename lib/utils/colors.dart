@@ -1,54 +1,62 @@
 import 'package:flutter/material.dart';
 
-//constants color range for theme
-const Color kPrimaryColor = Color(0xFF3365B3);
-const Color kPrimaryLightColor = Color(0xFFDBE9FF);
+//constants color range for theme - Updated with no opacity
+const Color kPrimaryColor = Color(0xFF2563EB); // Blue-600
+const Color kPrimaryDark = Color(0xFF1D4ED8); // Blue-700
+const Color kPrimaryLight = Color(0xFF3B82F6); // Blue-500
+const Color kSecondary = Color(0xFF10B981); // Emerald-500
+const Color kSecondaryDark = Color(0xFF059669); // Emerald-600
+const Color kAccent = Color(0xFFF59E0B); // Amber-500
+const Color kAccentLight = Color(0xFFFBBF24); // Amber-400
 
-const Color kButtonColor = Color(0xFF207398);
+const Color kSuccess = Color(0xFF10B981); // Emerald-500
+const Color kWarning = Color(0xFFF59E0B); // Amber-500
+const Color kError = Color(0xFFEF4444); // Red-500
+const Color kInfo = Color(0xFF3B82F6); // Blue-500
+
+const Color kSurface = Color(0xFFFFFFFF); // White
+const Color kBackground = Color(0xFFF8FAFC); // Slate-50
+const Color kCardBackground = Color(0xFFFFFFFF); // White
+const Color kBorder = Color(0xFFE2E8F0); // Slate-200
+const Color kDivider = Color(0xFFCBD5E1); // Slate-300
+
+const Color kTextPrimary = Color(0xFF0F172A); // Slate-900
+const Color kTextSecondary = Color(0xFF475569); // Slate-600
+const Color kTextMuted = Color(0xFF94A3B8); // Slate-400
+const Color kTextDisabled = Color(0xFFCBD5E1); // Slate-300
+
+const Color kInputBackground = Color(0xFFF8FAFC); // Slate-50
+const Color kInputBorder = Color(0xFFD1D5DB); // Gray-300
+const Color kInputFocused = Color(0xFF2563EB); // Blue-600
+
+// Legacy colors for compatibility
+const Color kButtonColor = kPrimaryColor;
 const Color kbuttonTextColor = Colors.white;
-const Color formBgColor = Color(0xFFF6FAFF);
-
-Color bgOverlayColor = const Color(0xFF125E80).withOpacity(0.80);
-
-const Color kWhiteLilac = Color.fromRGBO(248, 250, 252, 1);
-const Color kBlackPearl = Color.fromRGBO(30, 31, 43, 1);
-const Color kBrinkPink = Color.fromRGBO(255, 97, 136, 1);
-const Color kJuneBud = Color.fromRGBO(186, 215, 97, 1);
-const Color kWhite = Color.fromRGBO(255, 255, 255, 1);
+const Color formBgColor = kInputBackground;
+const Color kWhite = Colors.white;
 const Color kBlack = Colors.black;
-const Color kGrey = Colors.grey;
-const Color kNevada = Color.fromRGBO(105, 109, 119, 1);
-const Color kEbonyClay = Color.fromRGBO(40, 42, 58, 1);
-// const Color primaryColor = Color(0xFFE1B340);
-const Color bottomnavLightbackgroundColor = Color(0xFFEEEEEE);
-const Color bottomnavdarkbackgroundColor = Color(0xFF262625);
-const Color darkBackgroundColor = Color(0xFFE8EDF4);
-const Color lightBackgroundColor = Color(0xFFFFFFFF);
+const Color kGrey = Color(0xFF6B7280); // Gray-500
 
-const Color redColor = Color(0xFFFF0000);
-const Color blueColor = Color(0xFF3385FF);
-LinearGradient gradientColor = const LinearGradient(colors: [
-  Color(0xFFB3803B),
-  Color(0xFFF4E486),
-  Color(0xFFF2E084),
-  Color(0xFF8F5E26)
-],
+// Gradient colors
+LinearGradient get primaryGradient => const LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [kPrimaryColor, kPrimaryDark],
 );
-LinearGradient buttonGradient = const LinearGradient(
-    // tileMode: TileMode.repeated,
-    end: Alignment.bottomCenter,
-    begin: Alignment.topCenter,
-    colors: [
-      Color(0xFFB3803B),
-      Color(0xFFF4E486),
-      Color(0xFFF2E084),
-      Color(0xFF8F5E26)
-  ],
+
+LinearGradient get successGradient => const LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [kSuccess, kSecondaryDark],
 );
-LinearGradient gradientColorLight = const LinearGradient(colors: [
-  Color(0xFFB3803B),
-  Color(0xFFC69A58),
-  Color(0xFFD7A760),
-  Color(0xFF8F5E26)
-],
+
+LinearGradient get warningGradient => const LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [kWarning, kAccent],
 );
+
+// Status colors for balance validation
+const Color kBalanced = Color(0xFF10B981); // Emerald-500
+const Color kImbalanced = Color(0xFFEF4444); // Red-500
+const Color kPending = Color(0xFFF59E0B); // Amber-500
