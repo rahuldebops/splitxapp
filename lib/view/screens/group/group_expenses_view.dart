@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:splitxapp/models/expense.dart'; // Import the full Expense model
+import 'package:splitxapp/view/screens/expense/expense_form_view.dart';
 import 'package:splitxapp/view/screens/group/group_expenses_view_model.dart';
 import 'package:splitxapp/view/widgets/expense_card.dart';
 import 'package:splitxapp/view/widgets/expense_filter_widget.dart';
@@ -49,7 +50,8 @@ class _GroupExpensesViewState extends ConsumerState<GroupExpensesView> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(groupExpensesViewModelProvider(widget.groupId));
-    return RefreshIndicator(
+    return Scaffold(
+      body: RefreshIndicator(
       onRefresh: () => ref
           .read(groupExpensesViewModelProvider(widget.groupId).notifier)
           .refreshExpenses(),
@@ -99,17 +101,21 @@ class _GroupExpensesViewState extends ConsumerState<GroupExpensesView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Total Group Expenses',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.white.withOpacity(0.9))),
+                  Text(
+                    'Total Group Expenses',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  Text('₹${viewModel.totalExpenses.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28)),
+                  Text(
+                    '₹${viewModel.totalExpenses.toStringAsFixed(2)}',
+                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   Row(
                     children: [
@@ -117,19 +123,21 @@ class _GroupExpensesViewState extends ConsumerState<GroupExpensesView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Your Share',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                        color: Colors.white.withOpacity(0.8))),
-                            Text('₹${viewModel.yourShare.toStringAsFixed(2)}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600)),
+                            Text(
+                              'Your Share',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Colors.white.withOpacity(0.8),
+                                  ),
+                            ),
+                            Text(
+                              '₹${viewModel.yourShare.toStringAsFixed(2)}',
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
                           ],
                         ),
                       ),
@@ -137,19 +145,21 @@ class _GroupExpensesViewState extends ConsumerState<GroupExpensesView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('You Paid',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                        color: Colors.white.withOpacity(0.8))),
-                            Text('₹${viewModel.youPaid.toStringAsFixed(2)}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600)),
+                            Text(
+                              'You Paid',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Colors.white.withOpacity(0.8),
+                                  ),
+                            ),
+                            Text(
+                              '₹${viewModel.youPaid.toStringAsFixed(2)}',
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
                           ],
                         ),
                       ),
@@ -181,42 +191,43 @@ class _GroupExpensesViewState extends ConsumerState<GroupExpensesView> {
                 ),
                 child: Column(
                   children: [
-                    Icon(Icons.receipt_long_outlined,
-                        size: 48, color: kGrey.withOpacity(0.5)),
+                    Icon(
+                      Icons.receipt_long_outlined,
+                      size: 48,
+                      color: kGrey.withOpacity(0.5),
+                    ),
                     const SizedBox(height: 16),
-                    Text('No Expenses Found',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(
+                      'No Expenses Found',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Text(
-                        viewModel.hasActiveFilters
-                            ? 'Try adjusting your filters to see more expenses'
-                            : 'Start adding expenses to track group spending',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: kGrey)),
+                      viewModel.hasActiveFilters
+                          ? 'Try adjusting your filters to see more expenses'
+                          : 'Start adding expenses to track group spending',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: kGrey),
+                    ),
                   ],
                 ),
               ),
             )
           else
             SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final expense = viewModel.filteredExpenses[index];
-                  return ExpenseCard(
-                    expense: expense,
-                    onTap: () => _showExpenseDetails(context, expense),
-                  );
-                },
-                childCount: viewModel.filteredExpenses.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final expense = viewModel.filteredExpenses[index];
+                return ExpenseCard(
+                  expense: expense,
+                  onTap: () => _showExpenseDetails(context, expense),
+                );
+              }, childCount: viewModel.filteredExpenses.length),
             ),
-          
+
           // Pagination loading indicator
           SliverToBoxAdapter(
             child: viewModel.loading && viewModel.filteredExpenses.isNotEmpty
@@ -230,6 +241,12 @@ class _GroupExpensesViewState extends ConsumerState<GroupExpensesView> {
           // Bottom padding
           const SliverToBoxAdapter(child: SizedBox(height: 80)),
         ],
+      ),
+    ),
+    floatingActionButton: FloatingActionButton(
+      onPressed: () => _navigateToExpenseForm(context),
+      backgroundColor: kPrimaryColor,
+      child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -261,11 +278,12 @@ class _GroupExpensesViewState extends ConsumerState<GroupExpensesView> {
               ),
             ),
             const SizedBox(height: 20),
-            Text('Expense Details',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold)),
+            Text(
+              'Expense Details',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 20),
             const Expanded(
               child: Center(
@@ -273,6 +291,18 @@ class _GroupExpensesViewState extends ConsumerState<GroupExpensesView> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void _navigateToExpenseForm(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExpenseFormView(
+          groupId: widget.groupId,
+          mode: ExpenseFormMode.create,
         ),
       ),
     );

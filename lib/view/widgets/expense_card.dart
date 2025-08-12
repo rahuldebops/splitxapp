@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:splitxapp/models/expense.dart';
 import 'package:splitxapp/utils/colors.dart';
+import 'package:splitxapp/view/screens/expense/expense_form_view.dart';
 
 class ExpenseCard extends StatelessWidget {
   final Expense expense;
@@ -19,7 +20,18 @@ class ExpenseCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onTap,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ExpenseFormView(
+                  groupId: expense.groupId,
+                  mode: ExpenseFormMode.view,
+                  expenseId: expense.id,
+                ),
+              ),
+            );
+          },
           borderRadius: BorderRadius.circular(12),
           child: Container(
             padding: const EdgeInsets.all(16),
@@ -170,4 +182,5 @@ class ExpenseCard extends StatelessWidget {
       return 'Just now';
     }
   }
+  
 }
